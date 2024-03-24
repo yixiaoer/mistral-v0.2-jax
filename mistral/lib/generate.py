@@ -17,7 +17,7 @@ n_hidden_layers = 32 ## model.config.num_hidden_layers
 k_v_dimension = 128
 k_v_cache_n = 2
 
-def generate(params: MistralLMParams, tokenizer: AutoTokenizer, sentences: list[str], max_length: int, max_new_tokens: int, *, key: Array | None = None, top_k: int | None = None, top_p: float | None = None, temperature: float = 1., beam_nums: int | None = None, sliding_window: int = 4096) -> Array:
+def generate(params: MistralLMParams, tokenizer: AutoTokenizer, sentences: list[str], max_length: int, max_new_tokens: int, *, key: Array | None = None, top_k: int | None = None, top_p: float | None = None, temperature: float = 1., beam_nums: int | None = None) -> Array:
     # `max_length` and `max_new_tokens` jointly influence the maximum number of tokens generated
     inputs = tokenizer(sentences, padding=True, return_tensors='jax')
     eos_ids = tokenizer(tokenizer.eos_token, return_tensors='jax').input_ids[0, 1:]  # only eos_ids, not include bos_ids
@@ -26,7 +26,6 @@ def generate(params: MistralLMParams, tokenizer: AutoTokenizer, sentences: list[
     batch_size, batch_len = input_ids.shape
     attn_mask = inputs.attention_mask.astype(jnp.bool_)
     qk_mask = jnp.tril(jnp.einsum('bi,bj->bij', attn_mask, attn_mask))[:, None, None]
-    qk_mask = jnp.triu(qk_mask, k=-sliding_window)
     kv_cache = None
 
     generate_tokens_n = min(*(max_length - jnp.sum(attn_mask == True, axis=1)), max_new_tokens)

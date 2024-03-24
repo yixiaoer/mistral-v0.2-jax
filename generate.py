@@ -7,14 +7,14 @@ from transformers import AutoTokenizer, MistralForCausalLM
 
 jax.config.update('jax_default_matmul_precision', jax.lax.Precision.HIGHEST)
 
-
 from mistral.model.mistral_lm import convert_mistral_lm_params, shard_mistral_lm_params
 from mistral.lib.generate import generate
 
 def main():
     jax.distributed.initialize()
-    model = MistralForCausalLM.from_pretrained('mistralai/Mistral-7B-v0.1')
-    tokenizer = AutoTokenizer.from_pretrained('mistralai/Mistral-7B-v0.1')
+    model_dir = 'mistral-hf-7B-v0.2'  # convert first with 'Mistral 7B v0.2 Parameter Conversion' part in README
+    model = MistralForCausalLM.from_pretrained(model_dir)
+    tokenizer = AutoTokenizer.from_pretrained(model_dir)
     tokenizer.pad_token = tokenizer.eos_token
 
     if jax.local_device_count() == 8:
@@ -33,7 +33,7 @@ def main():
     key = jrand.key(42)
     key, subkey = jrand.split(key)
 
-    output_ids = generate(params, tokenizer, sentences, max_length, max_new_tokens, sliding_window=model.config.sliding_window)
+    output_ids = generate(params, tokenizer, sentences, max_length, max_new_tokens)
     output = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
     output_ids_bs = generate(params, tokenizer, sentences, max_length, max_new_tokens, beam_nums=5)
     output_bs = tokenizer.batch_decode(output_ids_bs, skip_special_tokens=True)
@@ -56,12 +56,12 @@ def main():
     print(f'PyTorch output (Beam Search): {output_pt_bs}')
     print(f'JAX output == PyTorch output: {output == output_pt}')
     print(f'JAX output == PyTorch output (Beam Search): {output_bs == output_pt_bs}')
-    # JAX(sampling) output: ["How have you been?\nWe're still working our dayj0bes, and I think it has taken me until today for it finally feel that the year is starting to roll", 'The Lord of the Rings is a trilogy of high fantasy novels written by English author J. R. R. Tolkien. The trilogy, collectively titled The Lord of']
-    # JAX output: ['How have you been? I’ve been busy with work and life, but I’m still here. I’m still here.\n\nI’ve been thinking about this', 'The Lord of the Rings is a series of three epic fantasy novels written by J. R. R. Tolkien. The books tell of the quest of a group of heroes to destroy a']
-    # PyTorch output: ['How have you been? I’ve been busy with work and life, but I’m still here. I’m still here.\n\nI’ve been thinking about this', 'The Lord of the Rings is a series of three epic fantasy novels written by J. R. R. Tolkien. The books tell of the quest of a group of heroes to destroy a']
-    # JAX output (Beam Search): ['How have you been? It’s been a while since I’ve written a blog post, and I’ve missed it. I’ve had a lot going on in my', 'The Lord of the Rings is a series of high fantasy novels written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien']
-    # PyTorch output (Beam Search): ['How have you been? It’s been a while since I’ve written a blog post, and I’ve missed it. I’ve had a lot going on in my', 'The Lord of the Rings is a series of high fantasy novels written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien']
-    # JAX output == PyTorch output: True
-    # JAX output == PyTorch output (Beam Search): True
+# JAX(sampling) output: ['How have you been? I hope your 14th day in January has treated everyone with good luck. I know mine is not going too bad, although my head has felt a', 'The Lord of the Rings is a trilogy of high fantasy novels written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tol']
+# JAX output: ['How have you been?\n\nI’m doing well. I’m in the middle of a big project at work, so I’ve been a little busy.\n\n', 'The Lord of the Rings is a fantasy novel written by J. R. R. Tolkien. It is the third and final part of the trilogy, preceded by The Hob']
+# PyTorch output: ['How have you been?\n\nI’m doing well. I’m in the middle of a big project at work, so I’ve been a little busy.\n\n', 'The Lord of the Rings is a fantasy novel written by J. R. R. Tolkien. It is the third and final part of the trilogy, preceded by The Hob']
+# JAX output (Beam Search): ['How have you been? It’s been a while since I’ve written a blog post. I’ve been so busy with work and life in general that I haven’t', 'The Lord of the Rings is a series of high fantasy novels written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien']
+# PyTorch output (Beam Search): ['How have you been? It’s been a while since I’ve written a blog post. I’ve been so busy with work and life in general that I haven’t', 'The Lord of the Rings is a series of high fantasy novels written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien']
+# JAX output == PyTorch output: True
+# JAX output == PyTorch output (Beam Search): True
 if __name__ == '__main__':
     main()

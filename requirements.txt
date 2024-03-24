@@ -4,3 +4,5 @@ jaxlib
 torch
 transformers
 einops
+sentencepiece
+accelerate

@@ -11,7 +11,7 @@ d_k = 128
 # TODO: Mostly taken from https://github.com/kingoflolz/mesh-transformer-jax/blob/master/mesh_transformer/layers.py
 # and https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/modeling_llama.py#L92
 def _make_weights(seq_len: int, d_k: int) -> tuple[Array, Array]:
-    inv_freq = 1. / (10000 ** (jnp.arange(0, d_k, 2) / d_k))
+    inv_freq = 1. / (1000000 ** (jnp.arange(0, d_k, 2) / d_k))
     sinusoid_inp = op.einsum(jnp.arange(seq_len), inv_freq, 'L, j -> L j')
     sin_val = jnp.sin(sinusoid_inp)
     cos_val = jnp.cos(sinusoid_inp)
