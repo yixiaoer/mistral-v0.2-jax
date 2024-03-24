@@ -1,0 +1,6 @@
+mypy
+jax
+jaxlib
+torch
+transformers
+einops
