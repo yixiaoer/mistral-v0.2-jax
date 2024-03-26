@@ -1,8 +1,10 @@
 # Mistral 7B v0.2 JAX
 
-This project is the JAX implementation of [Mistral 7B v0.2 Base](https://twitter.com/MistralAILabs/status/1771670765521281370), advancing the work of my earlier repository [mistral 7B JAX](https://github.com/yixiaoer/mistral-jax/tree/main).
+This project is the JAX implementation of [Mistral 7B v0.2 Base](https://twitter.com/MistralAILabs/status/1771670765521281370), advancing the work of my earlier repository [mistral 7B JAX](https://github.com/yixiaoer/mistral-jax/tree/main). 
 
 It is supported by Cloud TPUs from Google's [TPU Research Cloud (TRC)](https://sites.research.google/trc/about/).
+
+*Go to [Mistral 7B v0.2 JAX Documentation Page](https://mistral-v02-jax.readthedocs.io/en/latest/).*
 
 ## Roadmap
 
