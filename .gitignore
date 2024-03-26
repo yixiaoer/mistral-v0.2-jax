@@ -3,3 +3,4 @@ __pycache__
 /_*.py
 *.tar
 *v0.2
+/docs/_build/

@@ -1,0 +1,11 @@
+sphinx
+sphinx-autobuild
+sphinx-book-theme
+
+datasets
+einops
+jax
+jaxlib
+numpy
+torch
+transformers

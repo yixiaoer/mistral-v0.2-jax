@@ -4,6 +4,17 @@ from datasets import load_dataset
 from torch.utils.data import Dataset
 
 def load_data(splitting: str) -> tuple[list[str], list[int]]:
+    """
+    Loads the example data, the Yelp review dataset, and returns the text inputs with corresponding labels for either the training or test split.
+
+    Args:
+        splitting (str): A string indicating which split of the dataset to load. Expected values are 'train' for the training set and any other value will default to loading the test set.
+
+    Returns:
+        tuple[list[str], list[int]]: A tuple containing two lists:
+            - The first list contains the text of the reviews.
+            - The second list contains the corresponding labels as integers.
+    """
     dataset = load_dataset("yelp_review_full")
     if splitting == 'train':
         train_input = dataset['train']['text']

@@ -168,6 +168,16 @@ def partition_at_ellipsis(lst: list) -> tuple[list, list]:
     return l, r
 
 def einshard(arr: Array, expression: str) -> Array:
+    """
+    Shards a jax.Array according to a specified pattern, using a human-readable expression similar to that used in einsum notation.
+
+    Args:
+        arr (Array): The Array to be processed with tensor parallelism.
+        expression (str): A human-readable expression similar to einsum notation that specifies the sharding pattern.
+
+    Returns:
+        Array: The Array has be tensor paralle.
+    """
     n_devices = jax.device_count()
 
     _, (elements_left, elements_right) = parse_expression(expression, 0)

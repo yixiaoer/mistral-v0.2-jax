@@ -10,6 +10,21 @@ DataTrain = tuple[Array, Array, Array, Array]
 DataTest = tuple[Array, Array, Array]
 
 def raw_collate_fn(tokenizer: AutoTokenizer, max_length: int, batch: list[tuple[str, Any]]) -> DataTrain:
+    """
+    Prepares and pads sequences and labels from a batch of data for training, handling padding internally.
+
+    Args:
+        tokenizer (AutoTokenizer): The tokenizer used for converting text to token IDs.
+        max_length (int): The maximum length of the sequence after tokenization.
+        batch (list[tuple[str, Any]]): A list of tuples, where each tuple contains a text string and its associated label.
+
+    Returns:
+        DataTrain: A tuple containing training data with four JAX arrays:
+            - The token IDs of the sequences.
+            - The attention mask for the sequences (indicating real tokens vs padded tokens).
+            - The token IDs for the labels.
+            - The attention mask for the labels.
+    """
     # after tokenizer(sentence)，1(bos_token_id) is added at begining
     # bos_id = tokenizer.bos_token_id
     pad_id = tokenizer.pad_token_id
@@ -52,7 +67,21 @@ def raw_collate_fn(tokenizer: AutoTokenizer, max_length: int, batch: list[tuple[
     labels_mask = jnp.array(all_label_mask, dtype=jnp.bool_)
     return seq_ids, seq_mask, labels_ids, labels_mask
 
-def test_collate_fn(tokenizer: AutoTokenizer, max_length: int, batch: list[tuple[str, Any]]) -> DataTrain:
+def test_collate_fn(tokenizer: AutoTokenizer, max_length: int, batch: list[tuple[str, Any]]) -> DataTest:
+    """
+    Prepares and pads sequences and labels from a batch of data for testing, handling padding internally.
+
+    Args:
+        tokenizer (AutoTokenizer): The tokenizer used for converting text to token IDs.
+        max_length (int): The maximum length of the sequence after tokenization.
+        batch (list[tuple[str, Any]]): A list of tuples, where each tuple contains a text string and its associated label.
+
+    Returns:
+        DataTest: A tuple containing testing data with three JAX arrays:
+            - The token IDs of the sequences.
+            - The attention mask for the sequences (indicating real tokens vs padded tokens).
+            - The token IDs for the labels.
+    """
     bos_id = tokenizer.bos_token_id
     eos_id = tokenizer.eos_token_id
     pad_id = tokenizer.pad_token_id

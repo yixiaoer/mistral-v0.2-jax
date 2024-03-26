@@ -13,6 +13,16 @@ from ..lib.einshard import einshard
 DecoderBlockParams = tuple[RMSNormParams, AttentionParams, MLPLayerParams, RMSNormParams]
 
 def convert_decoder_block_params(decoder_block: MistralDecoderLayer) -> DecoderBlockParams:
+    """
+    Converts decoder block parameters from MistralDecoderLayer(PyTorch tensor) to DecoderBlockParams(JAX Array).
+
+    Args:
+        decoder_block (MistralDecoderLayer): The decoder block's MistralDecoderLayer.
+
+    Returns:
+        DecoderBlockParams: The converted decoder block parameters.
+    """
+
     input_layernorm = convert_rms_norm_params(decoder_block.input_layernorm)
     self_attn = convert_attention_params(decoder_block.self_attn)
     mlp = convert_mlp_layer_params(decoder_block.mlp)
@@ -23,6 +33,15 @@ def convert_back_decoder_block_params():
     pass
 
 def shard_decoder_block_params(params: DecoderBlockParams) -> DecoderBlockParams:
+    """
+    Shard the DecoderBlockParams params for distributed computing.
+
+    Args:
+        params (DecoderBlockParams): The decoder block parameters.
+
+    Returns:
+        DecoderBlockParams: The decoder block parameters modified with tensor parallelism, allowing for distributed computation across multiple devices.
+    """
     input_layernorm, self_attn, mlp, post_attention_layernorm = params
     input_layernorm = shard_rms_norm_params(input_layernorm)
     self_attn = shard_attention_params(self_attn)
@@ -31,6 +50,20 @@ def shard_decoder_block_params(params: DecoderBlockParams) -> DecoderBlockParams
     return input_layernorm, self_attn, mlp, post_attention_layernorm
 
 def forward_decoder_block(params: DecoderBlockParams, seq: Array, qk_mask: Array, rotary_values: RotaryValues ,kv_cache_cur: KVCache, kv_cache_pre: KVCache) -> tuple[Array, KVCache, KVCache]:
+    """
+    Executes the forward pass of a decoder block using the specified parameters and input sequence.
+
+    Args:
+        params (DecoderBlockParams): The decoder block parameters.
+        seq (Array): The input sequences to the decoder block.
+        qk_mask (Array): The qk mask for the attention mechanism, determining which parts of the sequence are allowed to attend to each other.
+        rotary_values (RotaryValues): Rotary positional embeddings values.
+        kv_cache_cur (KVCache): The current KVCache.
+        kv_cache_pre (KVCache): The previous KVCache.
+
+    Returns:
+        tuple[Array, KVCache, KVCache]: A tuple containing the output sequence after decoder block, and the updated current and previous KVCache.
+    """
     input_layernorm, self_attn, mlp, post_attention_layernorm = params
 
     # residual connection

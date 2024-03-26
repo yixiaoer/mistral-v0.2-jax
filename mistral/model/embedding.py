@@ -10,15 +10,43 @@ from ..lib.einshard import einshard
 EmbeddingParams = Array
 
 def convert_embedding_params(embedding: TorchEmbedding) -> EmbeddingParams:
+    """
+    Converts PyTorch embedding parameters to a EmbeddingParams compatible with JAX.
+
+    Args:
+        embedding (TorchEmbedding): The PyTorch embedding layer from which to extract the weights.
+
+    Returns:
+        EmbeddingParams: The embedding parameters extracted from the PyTorch layer and formatted for compatibility with JAX operations.
+    """
     return pt2jax(embedding.weight.data)
 
 def convert_back_embedding_params():
     pass
 
 def shard_embedding_params(params: EmbeddingParams) -> EmbeddingParams:
+    """
+    Shard the EmbeddingParams params for distributed computing.
+
+    Args:
+        params (EmbeddingParams): The EmbeddingParams parameters.
+
+    Returns:
+        DecoderBlockParams: The decoder embedding parameters replica for distributed computation across multiple devices.
+    """
     return einshard(params, '... -> 1 ...')
 
 def forward_embedding(params: EmbeddingParams, input_ids: Array) -> Array:
+    """
+    Get the embedding with input IDS.
+
+    Args:
+        params (EmbeddingParams): The embedding parameters.
+        input_ids (Array): An array of input IDS to look up the embedding.
+
+    Returns:
+        Array: The embedding Array of input IDS.
+    """
     return params[input_ids]
 
 def test_forward_embedding(model: MistralForCausalLM) -> None:

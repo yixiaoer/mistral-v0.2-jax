@@ -22,6 +22,15 @@ d_k = d_v = 128
 AttentionParams = tuple[Array, Array, Array, Array]
 
 def convert_attention_params(self_attn: MistralAttention) -> AttentionParams:
+    """
+    Converts the attention parameters from MistralAttention HuggingFace format with PyTorch `tensor` to `jax.Array`.
+
+    Args:
+        self_attn (MistralAttention): The attention parameters in MistralAttention.
+
+    Returns:
+        AttentionParams: The attention parameters converted into the AttentionParams with JAX.
+    """
     q_proj = self_attn.q_proj.weight.data
     k_proj = self_attn.k_proj.weight.data
     v_proj = self_attn.v_proj.weight.data
@@ -38,6 +47,15 @@ def convert_back_attention_params():
     pass
 
 def shard_attention_params(params: AttentionParams) -> AttentionParams:
+    """
+    Shard the attention parameters for distributed computing.
+
+    Args:
+        params (AttentionParams): The attention parameters.
+
+    Returns:
+        AttentionParams: The attention parameters modified with tensor parallelism, allowing for distributed computation across multiple devices.
+    """
     q_proj, k_proj, v_proj, o_proj = params
     # q_proj = einshard(q_proj, 'm r h k -> m r h1 k')
     # k_proj = einshard(k_proj, 'm h k -> m h1 k')
@@ -50,6 +68,22 @@ def shard_attention_params(params: AttentionParams) -> AttentionParams:
     return q_proj, k_proj, v_proj, o_proj
 
 def forward_attention(params: AttentionParams, seq: Array, qk_mask: Array, rotary_values: RotaryValues, kv_cache_cur: KVCache, kv_cache_pre: KVCache) -> tuple[Array, KVCache, KVCache]:
+    """
+    Performs the forward pass of the attention mechanism using.
+
+    This function executes the attention mechanism on the input sequence `seq` using the provided attention parameters. 
+
+    Args:
+        params (AttentionParams): The attention parameters.
+        seq (Array): The input sequences on which attention is to be applied.
+        qk_mask (Array): The qk mask for the attention mechanism, determining which parts of the sequence are allowed to attend to each other.
+        rotary_values (RotaryValues): Rotary positional embeddings values.
+        kv_cache_cur (KVCache): The current KVCache.
+        kv_cache_pre (KVCache): The previous KVCache.
+
+    Returns:
+        tuple[Array, KVCache, KVCache]: A tuple containing the output sequence after applying attention, and the updated current and previous KVCache.
+    """
     q_proj_jax, k_proj_jax, v_proj_jax, o_proj_jax = params
 
     # for q, the seq is src_seq, 
