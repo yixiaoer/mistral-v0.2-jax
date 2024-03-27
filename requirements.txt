@@ -1,4 +1,3 @@
-mypy
 jax
 jaxlib
 torch
@@ -6,3 +5,8 @@ transformers
 einops
 sentencepiece
 accelerate
+
+mypy
+sphinx
+sphinx-autobuild
+sphinx-book-theme

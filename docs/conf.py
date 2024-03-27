@@ -21,11 +21,16 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
 ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+intersphinx_mapping = {
+    'jax': ('https://jax.readthedocs.io/en/latest/', None),
+    'pytorch': ('https://pytorch.org/docs/stable/', None),
+}
 
 
 # -- Options for HTML output -------------------------------------------------
