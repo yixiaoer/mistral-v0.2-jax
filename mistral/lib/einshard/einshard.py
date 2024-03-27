@@ -3,7 +3,6 @@ from math import prod
 import jax
 from jax import Array
 from jax.experimental import mesh_utils
-import jax.numpy as jnp
 from jax.sharding import Mesh, NamedSharding, PartitionSpec as P
 
 from .parser import parse_expression
@@ -29,7 +28,8 @@ def einshard(arr: Array, expression: str) -> Array:
 
     res = parse_expression(expression, 0)
     if not res.is_success():
-        raise ValueError(f'Cannot parse einshard expression "{expression}"')
+        idx, desc = res.error
+        raise ValueError(f'Cannot parse einshard expression "{expression}", expected {desc} at position {idx}.')
     _, (elements_left, elements_right) = res.value
 
     n_left_ellipses = sum(element_left is ... for element_left in elements_left)
