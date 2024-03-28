@@ -2,6 +2,6 @@ mistral.model.embedding
 ===============================================================================================
 
 .. automodule:: mistral.model.embedding
-   :members:
-   :undoc-members: convert_back_embedding_params, test_forward_embedding
+   :members: convert_embedding_params, shard_embedding_params, forward_embedding, test_forward_embedding
+   :undoc-members:
    :show-inheritance:

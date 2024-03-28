@@ -40,6 +40,16 @@ def forward_rotary_embedding(m: Array, *, rotary_values: RotaryValues) -> Array:
     return a + b
 
 def make_rotary_values(batch_size: int, seq_len: int) -> RotaryValues:
+    """
+    Generates sine and cosine values for rotary positional embeddings based on sequence length.
+
+    Args:
+        batch_size (int): The number of sequences in a batch.
+        seq_len (int): The length of every sequences in a batch.
+
+    Returns:
+        RotaryValues: Rotary embedding values with sine values, and cosine values.
+    """
     sin_val, cos_val = _make_weights(seq_len, d_k)
 
     sin_val = jnp.repeat(sin_val[None], batch_size, axis=0)
@@ -47,6 +57,16 @@ def make_rotary_values(batch_size: int, seq_len: int) -> RotaryValues:
     return RotaryValues(sin_val, cos_val)
 
 def get_rotary_values_at_position(rotary_values: RotaryValues, position: Array) -> RotaryValues:
+    """
+    Extracts the rotary positional embedding values for a specific position across all sequences in a batch.
+
+    Args:
+        rotary_values (RotaryValues): The rotary values from which to extract the positional embeddings.
+        position (Array): The position for which to extract the rotary values.
+
+    Returns:
+        RotaryValues: Rotary embedding values for the specified position.
+    """
     sin_val, cos_val = rotary_values
     sin_val = sin_val[:, position][:, None]
     cos_val = cos_val[:, position][:, None]

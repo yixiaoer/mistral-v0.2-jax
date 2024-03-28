@@ -15,6 +15,15 @@ rms_norm_eps = 1e-5
 RMSNormParams = Array
 
 def convert_rms_norm_params(rms_norm: MistralRMSNorm) -> RMSNormParams:
+    """
+    Converts PyTorch rms norm parameters to a RMSNormParams compatible with JAX.
+
+    Args:
+        rms_norm (MistralRMSNorm): The PyTorch rms norm from which to extract the weights.
+
+    Returns:
+        RMSNormParams: The rms norm parameters extracted from the PyTorch layer and formatted for compatibility with JAX operations.
+    """
     return pt2jax(rms_norm.weight)
 
 def convert_back_rms_norm_params(rms_norm: RMSNormParams) -> MistralRMSNorm:
@@ -23,15 +32,43 @@ def convert_back_rms_norm_params(rms_norm: RMSNormParams) -> MistralRMSNorm:
     return rms_norm_pt
 
 def shard_rms_norm_params(params: RMSNormParams) -> RMSNormParams:
+    """
+    Shard the RMSNormParams params for distributed computing.
+
+    Args:
+        params (RMSNormParams): The RMSNormParams parameters.
+
+    Returns:
+        RMSNormParams: The rms norm parameters replica for distributed computation across multiple devices.
+    """
     return einshard(params, '... -> 1 ...')
 
 # Taken from https://github.com/ayaka14732/llama-2-jax/blob/main/lib/llama/rms_norm.py
 def forward_rms_norm(params: RMSNormParams, x: Array) -> Array:
+    """
+    Executes the forward pass of MLP.
+
+    Args:
+        params (RMSNormParams): The rms norm parameters.
+        x (Array): The input array.
+
+    Returns:
+        Array: The output after rms norm.
+    """
     x_rms = jnp.sqrt((x * x).mean(axis=-1, keepdims=True) + rms_norm_eps)
     y = x / x_rms * params
     return y
 
 def test_forward_rms_norm(model: MistralForCausalLM) -> None:
+    """
+    Tests the rsm norm.
+
+    Args:
+        model (MistralForCausalLM): PyTorch Mistral model to compare with this implementation.
+
+    Returns:
+        None.
+    """
     d_model = 4096
 
     seq_pt = torch.rand(2, 14, d_model)

@@ -124,6 +124,17 @@ def forward_attention(params: AttentionParams, seq: Array, qk_mask: Array, rotar
     return out, kv_cache_cur, kv_cache_pre
 
 def test_forward_attention(model: MistralForCausalLM) -> None:
+    """
+    Tests the forward attention mechanism.
+
+    This function is designed to validate the functionality and correctness of the attention mechanism with JAX.
+
+    Args:
+        model (MistralForCausalLM): PyTorch Mistral model to compare with this implementation.
+
+    Returns:
+        None.
+    """
     batch_size = 1
     seq_len = 6
 

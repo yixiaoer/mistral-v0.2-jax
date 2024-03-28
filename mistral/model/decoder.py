@@ -28,10 +28,10 @@ def shard_decoder_params(layers: DecoderParams) -> DecoderParams:
     Shard the DecoderParams params for distributed computing.
 
     Args:
-        params (DecoderBlockParams): The decoder parameters.
+        params (DecoderParams): The decoder parameters.
 
     Returns:
-        DecoderBlockParams: The decoder parameters modified with tensor parallelism, allowing for distributed computation across multiple devices.
+        DecoderParams: The decoder parameters modified with tensor parallelism, allowing for distributed computation across multiple devices.
     """
     return [shard_decoder_block_params(layer) for layer in layers]
 
@@ -49,7 +49,6 @@ def forward_decoder(params: DecoderParams, seq: Array, qk_mask: Array, rotary_va
 
     Returns:
         tuple[Array, KVCache]: A tuple containing the output sequence after all decoder blocks, and previous KVCache.
-
     """
     # TODO: jax.lax.scan
     kv_cache_cur = None

@@ -32,7 +32,7 @@ def shard_embedding_params(params: EmbeddingParams) -> EmbeddingParams:
         params (EmbeddingParams): The EmbeddingParams parameters.
 
     Returns:
-        DecoderBlockParams: The decoder embedding parameters replica for distributed computation across multiple devices.
+        EmbeddingParams: The decoder embedding parameters replica for distributed computation across multiple devices.
     """
     return einshard(params, '... -> 1 ...')
 
@@ -50,6 +50,15 @@ def forward_embedding(params: EmbeddingParams, input_ids: Array) -> Array:
     return params[input_ids]
 
 def test_forward_embedding(model: MistralForCausalLM) -> None:
+    """
+    Tests the embedding parameters.
+
+    Args:
+        model (MistralForCausalLM): PyTorch Mistral model to compare with this implementation.
+
+    Returns:
+        None.
+    """
     embedding_pt = model.model.embed_tokens
     input_ids_pt = torch.tensor([1, 20, 3, 5, 2, 7], dtype=torch.int32)
     result_pt = embedding_pt(input_ids_pt)
