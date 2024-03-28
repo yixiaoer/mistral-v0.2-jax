@@ -31,6 +31,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 intersphinx_mapping = {
     'jax': ('https://jax.readthedocs.io/en/latest/', None),
     'pytorch': ('https://pytorch.org/docs/stable/', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
 }
 
 

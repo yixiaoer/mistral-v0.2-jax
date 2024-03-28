@@ -7,7 +7,7 @@ from jax.sharding import Mesh, NamedSharding, PartitionSpec as P
 
 from .parser import parse_expression
 
-def partition_at_ellipsis(lst: list) -> tuple[list, list]:
+def _partition_at_ellipsis(lst: list) -> tuple[list, list]:
     idx = lst.index(...)
     l = lst[:idx]
     r = lst[idx + 1:]
@@ -42,10 +42,10 @@ def einshard(arr: Array, expression: str) -> Array:
         axis_names_for_left_augmented = [f'?{i}' for i in range(n_dims_elided)]
         axis_names_for_right_augmented = [(item, 0) for item in axis_names_for_left_augmented]
 
-        elements_left_left, elements_left_right = partition_at_ellipsis(elements_left)
+        elements_left_left, elements_left_right = _partition_at_ellipsis(elements_left)
         elements_left = [*elements_left_left, *axis_names_for_left_augmented, *elements_left_right]
 
-        elements_right_left, elements_right_right = partition_at_ellipsis(elements_right)
+        elements_right_left, elements_right_right = _partition_at_ellipsis(elements_right)
         elements_right = [*elements_right_left, *axis_names_for_right_augmented, *elements_right_right]
 
         # print(elements_left)
@@ -71,5 +71,5 @@ def einshard(arr: Array, expression: str) -> Array:
 
     devices = mesh_utils.create_device_mesh(mesh_shape)
     mesh = Mesh(devices, axis_names=axis_names)
-    arr = jax.device_put(arr, NamedSharding(mesh, P(*partition_spec)))
+    arr = jax.make_array_from_callback(arr.shape, NamedSharding(mesh, P(*partition_spec)), lambda idx: arr[idx])
     return arr
