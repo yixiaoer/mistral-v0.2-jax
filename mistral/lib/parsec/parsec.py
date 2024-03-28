@@ -151,6 +151,6 @@ sepby1: Callable[[Parser[U], Parser[V]], Parser[U]] = lambda parser, separator: 
 )
 
 const: Callable[[U], Callable[[V], U]] = lambda x: lambda _: x
-pvoid: Callable[[Parser[U]], Parser[Void]] = partial(pmap, const(Void))
+pvoid: Callable[[Parser[U]], Parser[VoidType]] = partial(pmap, const(Void))
 
 lazy = lambda ff: lambda *args: ff()(*args)

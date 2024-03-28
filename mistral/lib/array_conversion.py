@@ -6,12 +6,12 @@ import torch
 # PyTorch -> NumPy -> JAX
 # JAX -> NumPy -> PyTorch
 
-def pt2np(arr: torch.tensor) -> np.ndarray:
+def pt2np(arr: torch.Tensor) -> np.ndarray:
     '''
     Converts a PyTorch array into a NumPy array.
 
     Args:
-        x (torch.tensor): PyTorch array to convert.
+        x (torch.Tensor): PyTorch array to convert.
 
     Returns:
         np.ndarray: Converted NumPy array.
@@ -31,12 +31,12 @@ def np2jax(arr: np.ndarray) -> Array:
     '''
     return jnp.asarray(arr)
 
-def pt2jax(arr: torch.tensor) -> Array:
+def pt2jax(arr: torch.Tensor) -> Array:
     '''
     Converts a PyTorch array into a JAX array. The process involves converting the PyTorch tensor to a NumPy array first, then to JAX array.
 
     Args:
-        x (torch.tensor): PyTorch array to convert.
+        x (torch.Tensor): PyTorch array to convert.
 
     Returns:
         Array: Converted jax.Array.
@@ -68,7 +68,7 @@ def jax2np_noncopy(arr: Array) -> np.ndarray:
     '''
     return np.asarray(arr)
 
-def np2pt(arr: np.ndarray) -> torch.tensor:
+def np2pt(arr: np.ndarray) -> torch.Tensor:
     '''
     Converts a NumPy array into a PyTorch tensor.
 
@@ -76,11 +76,11 @@ def np2pt(arr: np.ndarray) -> torch.tensor:
         x (np.ndarray): NumPy array to convert.
 
     Returns:
-        torch.tensor: Converted tensor.
+        torch.Tensor: Converted tensor.
     '''
     return torch.from_numpy(arr)
 
-def jax2pt(arr: Array) -> torch.tensor:
+def jax2pt(arr: Array) -> torch.Tensor:
     '''
     Converts a JAX array into a PyTorch tensor.
 
@@ -88,11 +88,11 @@ def jax2pt(arr: Array) -> torch.tensor:
         x (Array): JAX array to convert.
 
     Returns:
-        torch.tensor: Converted tensor.
+        torch.Tensor: Converted tensor.
     '''
     return np2pt(jax2np(arr))
 
-def jax2pt_noncopy(arr: Array) -> torch.tensor:
+def jax2pt_noncopy(arr: Array) -> torch.Tensor:
     '''
     Converts a JAX array into a PyTorch tensor. The conversion process tries to avoid unnecessary copying when possible.
 
@@ -100,6 +100,6 @@ def jax2pt_noncopy(arr: Array) -> torch.tensor:
         x (Array): JAX array to convert.
 
     Returns:
-        torch.tensor: Converted tensor.
+        torch.Tensor: Converted tensor.
     '''
     return np2pt(jax2np_noncopy(arr))
