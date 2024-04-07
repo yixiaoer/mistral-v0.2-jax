@@ -35,7 +35,7 @@ class fail(Either[T, E]):
     def is_success(self) -> bool:
         return False
 
-    def get(self) -> T:
+    def get(self) -> E:
         return self.error
 
     def __eq__(self, other):
