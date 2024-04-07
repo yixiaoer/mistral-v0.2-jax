@@ -5,18 +5,19 @@ from typing import Callable, TypeVar
 from .Either import Either, success, fail
 from .Void import Void, VoidType
 
-Position = int
-ErrorType = str
-R = TypeVar('R')
 U = TypeVar('U')
 V = TypeVar('V')
 
-ParseResultSucceeded = tuple[Position, R]
-ParseResultFailed = tuple[Position, ErrorType]
-ParseResult = Either[ParseResultSucceeded, ParseResultFailed]
-Parser = Callable[[str, Position], ParseResult[R]]
-ParserSucceeded = Callable[[str, Position], ParseResultSucceeded[R]]
-ParserFailed = Callable[[str, Position], ParseResultFailed]
+type Position = int
+type ErrorType = str
+
+type ParseResultSucceeded[U] = tuple[Position, U]
+type ParseResultFailed = tuple[Position, ErrorType]
+type ParseResult[U] = Either[ParseResultSucceeded[U], ParseResultFailed]
+
+type ParserSucceeded[U] = Callable[[str, Position], ParseResultSucceeded[U]]
+type ParserFailed = Callable[[str, Position], ParseResultFailed]
+type Parser[U] = Callable[[str, Position], ParseResult[U]]
 
 def satisfy(predicate: Callable[[str], bool], desc: str) -> Parser[str]:
     def f(s: str, idx: Position) -> ParseResult[str]:

@@ -1,4 +1,6 @@
 {
+    "mypy.enabled": false,
+    "mypy.runUsingActiveInterpreter": true,
     "python.REPL.enableREPLSmartSend": false,
     "editor.formatOnSave": false
 }
