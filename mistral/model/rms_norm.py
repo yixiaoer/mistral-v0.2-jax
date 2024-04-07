@@ -41,7 +41,7 @@ def shard_rms_norm_params(params: RMSNormParams) -> RMSNormParams:
     Returns:
         RMSNormParams: The rms norm parameters replica for distributed computation across multiple devices.
     """
-    return einshard(params, '... -> 1* ...')
+    return einshard(params, '... -> * ...')
 
 # Taken from https://github.com/ayaka14732/llama-2-jax/blob/main/lib/llama/rms_norm.py
 def forward_rms_norm(params: RMSNormParams, x: Array) -> Array:

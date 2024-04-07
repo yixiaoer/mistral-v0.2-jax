@@ -23,7 +23,7 @@ tests = [
     {
         'n_devices': 1,
         'shape': (2,),
-        'expr': '... -> 1* ...',
+        'expr': '... -> * ...',
         'ans': (2,),
     },
     {
@@ -41,7 +41,7 @@ tests = [
     {
         'n_devices': 8,
         'shape': (4, 4),
-        'expr': 'a b -> 1* a* b*',
+        'expr': 'a b -> * a* b*',
         'ans': (2, 2),
     },
     {

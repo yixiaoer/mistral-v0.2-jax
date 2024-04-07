@@ -15,20 +15,28 @@ is_space: Callable[[str], bool] = lambda c: c.isspace()
 
 parse_0_to_9 = satisfy(is_0_to_9, 'digit 0-9')
 parse_1_to_9 = satisfy(is_1_to_9, 'digit 1-9')
+parse_integer = pmap(int, pjoin(pchain(parse_1_to_9, pjoin(many(parse_0_to_9)))))
+
 parse_identifier_char = satisfy(is_identifier_char, 'identifier')
 parse_identifier = pjoin(many1(parse_identifier_char))
+
 parse_space = satisfy(is_space, 'space')
 parse_spaces = many1(parse_space)
 parse_spaces_optional = pvoid(many(parse_space))
+
 parse_right_arrow = pvoid(literal('->'))
 parse_ellipsis = pmap(const(...), literal('...', desc='ellipsis'))
-parse_integer = pmap(int, pjoin(pchain(parse_1_to_9, pjoin(many(parse_0_to_9)))))
-parse_asterisk = with_default(pmap(const(True), literal('*')), default=False)
+parse_asterisk = pmap(const(True), literal('*'))
+
+parse_identifier_optional = with_default(parse_identifier, default=None)
+parse_integer_optional = with_default(parse_integer, default=1)
+parse_asterisk_optional = with_default(parse_asterisk, default=False)
 
 parse_element_left = anyof(parse_identifier, parse_ellipsis)
 parse_element_right = anyof(
-    pchain(with_default(parse_identifier, default=None), parse_integer, parse_asterisk),
-    pchain(parse_identifier, with_default(parse_integer, default=1), parse_asterisk),
+    pchain(parse_identifier_optional, parse_integer, parse_asterisk_optional),
+    pchain(parse_identifier, parse_integer_optional, parse_asterisk_optional),
+    pchain(parse_identifier_optional, parse_integer_optional, parse_asterisk),
     parse_ellipsis,
 )
 parse_elements_left = sepby1(parse_element_left, parse_spaces)
