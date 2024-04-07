@@ -3,11 +3,9 @@ from typing import Generic, TypeVar
 T = TypeVar('T')
 E = TypeVar('E')
 
-class Either(Generic[T, E]):
-    def is_success(self) -> bool:
-        raise NotImplementedError('Subclasses should implement this method')
+type Either[T, E] = success[T] | fail[E]
 
-class success(Either[T, E]):
+class success(Generic[T]):
     def __init__(self, value: T):
         self.value = value
 
@@ -25,7 +23,7 @@ class success(Either[T, E]):
             return False
         return self.value == other.value
 
-class fail(Either[T, E]):
+class fail(Generic[E]):
     def __init__(self, error: E):
         self.error = error
 

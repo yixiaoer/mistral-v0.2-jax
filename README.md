@@ -59,12 +59,13 @@ python generate.py
 
 ## Install
 
-This project requires Python 3.11, JAX 0.4.25.
+This project requires Python 3.12, JAX 0.4.26.
 
 Create venv:
 
 ```sh
-python3.11 -m venv venv
+python3.12 -m venv venv
+. venv/bin/activate
 ```
 
 Install dependencies:
