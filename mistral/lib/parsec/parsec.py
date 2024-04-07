@@ -122,7 +122,7 @@ def _join_descriptions(xs: list[str]) -> str:
     if len(xs) == 0:
         return ''
     if len(xs) == 1:
-        return xs
+        return xs[0]
     *init, tail = xs
     return ', '.join(init) + ' or ' + tail
 
