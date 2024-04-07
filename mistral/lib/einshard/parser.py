@@ -4,9 +4,9 @@ import unicodedata
 
 from ..parsec import anyof, const, literal, many, many1, parse_eof, pchain, pjoin, pmap, pvoid, satisfy, sepby1, with_default
 
-ElementLeft = str | EllipsisType
-ElementRight = tuple[str | None, int] | EllipsisType
-Expression = tuple[list[ElementLeft], list[ElementRight]]
+type ElementLeft = str | EllipsisType
+type ElementRight = tuple[str | None, int, bool] | EllipsisType
+type Expression = tuple[list[ElementLeft], list[ElementRight]]
 
 is_identifier_char: Callable[[str], bool] = lambda c: unicodedata.category(c)[0] == 'L' or c == '_'
 is_0_to_9: Callable[[str], bool] = lambda c: c.isdigit()
@@ -23,11 +23,12 @@ parse_spaces_optional = pvoid(many(parse_space))
 parse_right_arrow = pvoid(literal('->'))
 parse_ellipsis = pmap(const(...), literal('...', desc='ellipsis'))
 parse_integer = pmap(int, pjoin(pchain(parse_1_to_9, pjoin(many(parse_0_to_9)))))
+parse_asterisk = with_default(pmap(const(True), literal('*')), default=False)
 
 parse_element_left = anyof(parse_identifier, parse_ellipsis)
 parse_element_right = anyof(
-    pchain(with_default(parse_identifier, default=None), parse_integer),
-    pchain(parse_identifier, with_default(parse_integer, default=0)),
+    pchain(with_default(parse_identifier, default=None), parse_integer, parse_asterisk),
+    pchain(parse_identifier, with_default(parse_integer, default=1), parse_asterisk),
     parse_ellipsis,
 )
 parse_elements_left = sepby1(parse_element_left, parse_spaces)
