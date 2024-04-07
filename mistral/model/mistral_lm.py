@@ -40,7 +40,7 @@ def shard_mistral_lm_params(params: MistralLMParams) -> MistralLMParams:
     """
     model_params, lm_head = params
     model_params = shard_mistral_model_params(model_params)
-    lm_head = einshard(lm_head, '... -> 1 ...')
+    lm_head = einshard(lm_head, '... -> 1* ...')
     return model_params, lm_head
 
 def forward_mistral_lm(params: MistralLMParams, input_ids: Array, qk_mask: Array, rotary_values: RotaryValues, kv_cache_pre: KVCache) -> tuple[Array, KVCache]:
