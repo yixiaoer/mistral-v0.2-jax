@@ -40,7 +40,7 @@ def einshard(arr: Array, expression: str) -> Array:
         n_dims = len(arr.shape)
         n_dims_elided = n_dims - len(elements_left) + 1
         axis_names_for_left_augmented = [f'?{i}' for i in range(n_dims_elided)]
-        axis_names_for_right_augmented = [(item, 0) for item in axis_names_for_left_augmented]
+        axis_names_for_right_augmented = [(identifier, 1, False) for identifier in axis_names_for_left_augmented]  # 1: `sharding_number`, False: `is_proportional`
 
         elements_left_left, elements_left_right = _partition_at_ellipsis(elements_left)
         elements_left = [*elements_left_left, *axis_names_for_left_augmented, *elements_left_right]
@@ -51,18 +51,28 @@ def einshard(arr: Array, expression: str) -> Array:
         # print(elements_left)
         # print(elements_right)
 
-    sharding_numbers = [integer for _, integer in elements_right if integer != 0]
-    n_devices_base = prod(sharding_numbers)
-    n_sharded_axes = len(sharding_numbers)
-    assert n_devices % n_devices_base == 0
-    sharding_ratio_full = n_devices // n_devices_base
-    sharding_ratio_one = sharding_ratio_full ** (1 / n_sharded_axes)
-    assert sharding_ratio_one.is_integer()
-    sharding_ratio_one = int(sharding_ratio_one)
+    sharding_numbers_fixed = [sharding_number for _, sharding_number, is_proportional in elements_right if not is_proportional]
+    sharding_numbers_proportional = [sharding_number for _, sharding_number, is_proportional in elements_right if is_proportional]
 
-    mesh_shape = [1 if integer == 0 else integer * sharding_ratio_one for _, integer in elements_right]
+    if not sharding_numbers_proportional:
+        sharding_ratio = 1  # can be of whatever value because it will not be used in this case
+    else:
+        n_devices_needed_for_fixed = prod(sharding_numbers_fixed)
+        n_devices_needed_for_proportional_base = prod(sharding_numbers_proportional)
+        n_sharded_axes_proportional = len(sharding_numbers_proportional)
+
+        assert n_devices % n_devices_needed_for_fixed == 0
+        n_devices_available_proportional = n_devices // n_devices_needed_for_fixed
+
+        assert n_devices_available_proportional % n_devices_needed_for_proportional_base == 0
+        sharding_ratio_full = n_devices_available_proportional // n_devices_needed_for_proportional_base
+        sharding_ratio = sharding_ratio_full ** (1 / n_sharded_axes_proportional)
+        assert sharding_ratio.is_integer()
+        sharding_ratio = int(sharding_ratio)
+
+    mesh_shape = [sharding_number * (1 if not is_proportional else sharding_ratio) for _, sharding_number, is_proportional in elements_right]
     axis_names = tuple(f'a{i}' for i, _ in enumerate(elements_right))
-    d = {identifier: i for i, (identifier, _) in enumerate(elements_right) if identifier is not None}
+    d = {identifier: i for i, (identifier, _, _) in enumerate(elements_right) if identifier is not None}
     partition_spec = tuple(f'a{d[element_left]}' for element_left in elements_left)
 
     # print(mesh_shape)

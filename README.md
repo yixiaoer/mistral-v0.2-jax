@@ -212,7 +212,7 @@ However, the existing APIs for defining the split shapes were not intuitive enou
 
 While `einshard` worked well on CPUs and TPU v3-8, issues arose when running on TPU v4-32 due to its configuration of 4 hosts requiring cross-host partitioning, which `jax.device_put()` could not achieve. To overcome this, `jax.make_array_from_callback()` was used as a replacement.
 
-Further refinements and modifications to `einshard` are currently underway to enhance its functionality and adaptability.
+Further refinements and modifications have been introduced into `einshard` to enhance its functionality and adaptability.
 
 ### Generation with KVCache for a Single Sentence
 

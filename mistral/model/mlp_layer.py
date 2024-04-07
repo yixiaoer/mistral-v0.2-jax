@@ -39,9 +39,9 @@ def shard_mlp_layer_params(params: MLPLayerParams) -> MLPLayerParams:
         MLPLayerParams: The decoder embedding parameters replica for distributed computation across multiple devices.
     """
     gate_proj, up_proj, down_proj = params
-    gate_proj = einshard(gate_proj, 'm f -> m f1')
-    up_proj = einshard(up_proj, 'm f -> m f1')
-    down_proj = einshard(down_proj, 'f m -> f1 m')
+    gate_proj = einshard(gate_proj, 'm f -> m f1*')
+    up_proj = einshard(up_proj, 'm f -> m f1*')
+    down_proj = einshard(down_proj, 'f m -> f1* m')
     return gate_proj, up_proj, down_proj
 
 def forward_mlp_layer(params: MLPLayerParams, seq: Array) -> Array:
