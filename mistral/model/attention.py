@@ -57,14 +57,14 @@ def shard_attention_params(params: AttentionParams) -> AttentionParams:
         AttentionParams: The attention parameters modified with tensor parallelism, allowing for distributed computation across multiple devices.
     """
     q_proj, k_proj, v_proj, o_proj = params
-    # q_proj = einshard(q_proj, 'm r h k -> m r h1* k')
-    # k_proj = einshard(k_proj, 'm h k -> m h1* k')
-    # v_proj = einshard(v_proj, 'm h v -> m h1* v')
-    # o_proj = einshard(o_proj, 'r h v m -> r h1* v m')
-    q_proj = einshard(q_proj, 'm r h k -> m r h k1*')
-    k_proj = einshard(k_proj, 'm h k -> m h k1*')
-    v_proj = einshard(v_proj, 'm h v -> m h v1*')
-    o_proj = einshard(o_proj, 'r h v m -> r h v1* m')
+    # q_proj = einshard(q_proj, 'm r h k -> m r h* k')
+    # k_proj = einshard(k_proj, 'm h k -> m h* k')
+    # v_proj = einshard(v_proj, 'm h v -> m h* v')
+    # o_proj = einshard(o_proj, 'r h v m -> r h* v m')
+    q_proj = einshard(q_proj, 'm r h k -> m r h k*')
+    k_proj = einshard(k_proj, 'm h k -> m h k*')
+    v_proj = einshard(v_proj, 'm h v -> m h v*')
+    o_proj = einshard(o_proj, 'r h v m -> r h v* m')
     return q_proj, k_proj, v_proj, o_proj
 
 def forward_attention(params: AttentionParams, seq: Array, qk_mask: Array, rotary_values: RotaryValues, kv_cache_cur: KVCache, kv_cache_pre: KVCache) -> tuple[Array, KVCache, KVCache]:
