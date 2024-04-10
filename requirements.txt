@@ -2,12 +2,15 @@ jax
 jaxlib
 torch
 transformers
+datasets
 einops
 einshard>=0.2.0, <0.3
 sentencepiece
 accelerate
 
 mypy
+
 sphinx
 sphinx-autobuild
+sphinx-autodoc-typehints
 sphinx-book-theme
