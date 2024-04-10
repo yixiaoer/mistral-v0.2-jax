@@ -18,7 +18,6 @@ API
 
    mistral.lib.array_conversion
    mistral.lib.collate_fn
-   mistral.lib.einshard
    mistral.lib.example_data
    mistral.lib.generate
 

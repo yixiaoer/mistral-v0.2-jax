@@ -3,6 +3,7 @@ jaxlib
 torch
 transformers
 einops
+einshard>=0.2.0, <0.3
 sentencepiece
 accelerate
 

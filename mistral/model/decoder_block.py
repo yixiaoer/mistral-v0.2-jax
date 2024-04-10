@@ -1,5 +1,4 @@
 from jax import Array
-import jax.numpy as jnp
 from transformers import MistralForCausalLM
 from transformers.models.mistral.modeling_mistral import MistralDecoderLayer
 
@@ -8,7 +7,6 @@ from .kvcache import KVCache
 from .mlp_layer import MLPLayerParams, convert_mlp_layer_params, forward_mlp_layer, shard_mlp_layer_params
 from .rms_norm import RMSNormParams, convert_rms_norm_params, forward_rms_norm, shard_rms_norm_params
 from .rotary_embedding import RotaryValues
-from ..lib.einshard import einshard
 
 DecoderBlockParams = tuple[RMSNormParams, AttentionParams, MLPLayerParams, RMSNormParams]
 

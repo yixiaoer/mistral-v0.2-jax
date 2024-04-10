@@ -4,7 +4,6 @@ from torch.nn import ModuleList as TorchModuleList
 from .decoder_block import DecoderBlockParams, convert_decoder_block_params, forward_decoder_block, shard_decoder_block_params
 from .kvcache import KVCache
 from .rotary_embedding import RotaryValues
-from ..lib.einshard import einshard
 
 DecoderParams = list[DecoderBlockParams]
 

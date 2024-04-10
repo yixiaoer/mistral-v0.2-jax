@@ -1,3 +1,4 @@
+from einshard import einshard
 from jax import Array
 import jax.numpy as jnp
 import torch
@@ -5,7 +6,6 @@ from torch.nn import Embedding as TorchEmbedding
 from transformers import MistralForCausalLM
 
 from ..lib.array_conversion import pt2jax
-from ..lib.einshard import einshard
 
 EmbeddingParams = Array
 
