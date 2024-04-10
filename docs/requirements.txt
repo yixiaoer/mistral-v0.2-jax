@@ -1,12 +1,14 @@
+jax[cpu]
+torch
+transformers
+datasets
+einops
+einshard>=0.2.0, <0.3
+numpy
+sentencepiece
+accelerate
+
 sphinx
 sphinx-autobuild
 sphinx-autodoc-typehints
 sphinx-book-theme
-
-datasets
-einops
-jax
-jaxlib
-numpy
-torch
-transformers

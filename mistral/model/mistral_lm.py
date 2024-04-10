@@ -1,3 +1,4 @@
+from einshard import einshard
 import jax
 from jax import Array
 import jax.numpy as jnp
@@ -7,7 +8,6 @@ from .kvcache import KVCache
 from .mistral_model import MistralModelParams, convert_mistral_model_params, forward_mistral_model, shard_mistral_model_params
 from .rotary_embedding import RotaryValues, make_rotary_values
 from ..lib.array_conversion import pt2jax
-from ..lib.einshard import einshard
 
 MistralLMParams = tuple[MistralModelParams, Array]
 

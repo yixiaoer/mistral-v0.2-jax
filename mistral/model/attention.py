@@ -1,6 +1,7 @@
 import math
 
 import einops as op
+from einshard import einshard
 import jax
 from jax import Array
 import jax.numpy as jnp
@@ -11,7 +12,6 @@ from transformers.models.mistral.modeling_mistral import MistralAttention
 from .kvcache import KVCache
 from .rotary_embedding import RotaryValues, make_rotary_values, forward_rotary_embedding
 from ..lib.array_conversion import pt2jax
-from ..lib.einshard import einshard
 
 # TODO: eliminate this
 d_model = 4096
