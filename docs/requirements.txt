@@ -5,8 +5,8 @@ sphinx-book-theme
 
 datasets
 einops
-jax
-jaxlib
+einshard
+jax[cpu]
 numpy
 torch
 transformers
