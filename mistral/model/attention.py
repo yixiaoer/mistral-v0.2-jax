@@ -149,7 +149,6 @@ def test_forward_attention(model: MistralForCausalLM) -> None:
 
     seq_jax = pt2jax(seq_pt)
     attention_mask_jax = pt2jax(attention_mask_pt)
-    batch_size, seq_len, _ = seq_jax.shape
     rotary_values = make_rotary_values(batch_size, seq_len)
     out_jax, _, _ = forward_attention(params, seq_jax, attention_mask_jax, rotary_values, None, None)
 

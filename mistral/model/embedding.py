@@ -34,7 +34,7 @@ def shard_embedding_params(params: EmbeddingParams) -> EmbeddingParams:
     Returns:
         EmbeddingParams: The decoder embedding parameters replica for distributed computation across multiple devices.
     """
-    return einshard(params, '... -> 1 ...')
+    return einshard(params, '... -> * ...')
 
 def forward_embedding(params: EmbeddingParams, input_ids: Array) -> Array:
     """
