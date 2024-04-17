@@ -42,6 +42,8 @@ tokenizer = AutoTokenizer.from_pretrained(model_dir)
 tokenizer.pad_token = tokenizer.eos_token
 
 sentences = ['I have a cat.', 'There is a cat in my home.']
+# error from transformers: 'ImportError: Unable to convert output to JAX tensors format, JAX is not installed.', see https://github.com/huggingface/transformers/issues/28959; 
+# To solve it, `pip install flax`.
 inputs = tokenizer(sentences, padding=True, return_tensors='jax')
 input_ids = inputs.input_ids
 batch_size, batch_len = input_ids.shape
