@@ -9,11 +9,11 @@ import optax
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, MistralForCausalLM
 
-from mistral.lib.example_data import ExampleDataset
-from mistral.lib.collate_fn import raw_collate_fn
-from mistral.model.mistral_lm import MistralLMParams, forward_mistral_lm
-from mistral.model.rotary_embedding import RotaryValues, make_rotary_values
-from mistral.model.mistral_lm import convert_mistral_lm_params, shard_mistral_lm_params
+from mistral_v0_2.lib.example_data import ExampleDataset
+from mistral_v0_2.lib.collate_fn import raw_collate_fn
+from mistral_v0_2.model.mistral_lm import MistralLMParams, forward_mistral_lm
+from mistral_v0_2.model.rotary_embedding import RotaryValues, make_rotary_values
+from mistral_v0_2.model.mistral_lm import convert_mistral_lm_params, shard_mistral_lm_params
 
 initialise_tracking()
 

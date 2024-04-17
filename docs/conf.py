@@ -40,3 +40,5 @@ intersphinx_mapping = {
 
 html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
+
+source_suffix = ['.rst', '.md', '.ipynb']

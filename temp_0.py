@@ -15,8 +15,8 @@ from typing import NamedTuple
 import numpy as np
 import math
 
-from mistral.array_conversion import pt2jax, jax2pt_noncopy
-from mistral.rotary_embedding import _make_weights, make_rotary_values, forward_rotary_embedding
+from mistral_v0_2.lib.array_conversion import pt2jax, jax2pt_noncopy
+from mistral_v0_2.model.rotary_embedding import _make_weights, make_rotary_values, forward_rotary_embedding
 
 print(jax.devices())
 

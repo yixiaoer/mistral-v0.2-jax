@@ -14,7 +14,7 @@ def convert_mistral_model_params(model: MistralModel) -> MistralModelParams:
     Converts MistralModel (PyTorch tensor) to MistralModelParams(JAX Array).
 
     Args:
-        model (MistralModel): Mistral.
+        model (MistralModel): Mistral v0.2 model.
 
     Returns:
         MistralModelParams: The converted Mistral parameters.

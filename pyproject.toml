@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mistral-v0.2-jax"
+dynamic = ["dependencies", "version"]
+
+authors = [
+  { name="Shin", email="shin@yixiaoer.sg" },
+]
+requires-python = ">=3.12"
+description = "JAX implementation of the Mistral v0.2 base model."
+readme = "README.md"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "License :: OSI Approved :: MIT License",
+]
+
+[tools.setuptools]
+packages = ["mistral_v0_2"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+version = {attr = "mistral_v0_2.__version__"}
+
+[project.urls]
+Repository = "https://github.com/yixiaoer/mistral-v0.2-jax"
+Issues = "https://github.com/yixiaoer/mistral-v0.2-jax/issues"

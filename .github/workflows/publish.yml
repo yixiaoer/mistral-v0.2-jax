@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release
-      url: https://pypi.org/p/mistral-jax
+      url: https://pypi.org/p/mistral-v0.2-jax
     permissions:
       id-token: write
     steps:
