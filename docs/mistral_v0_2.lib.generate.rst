@@ -1,7 +1,7 @@
-mistral.lib.array_conversion
+mistral_v0_2.lib.generate
 ===============================================================================================
 
-.. automodule:: mistral.lib.array_conversion
+.. automodule:: mistral_v0_2.lib.generate
    :members:
    :undoc-members:
    :show-inheritance:

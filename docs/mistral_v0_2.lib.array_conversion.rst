@@ -1,7 +1,7 @@
-mistral.lib.collate_fn
+mistral_v0_2.lib.array_conversion
 ===============================================================================================
 
-.. automodule:: mistral.lib.collate_fn
+.. automodule:: mistral_v0_2.lib.array_conversion
    :members:
    :undoc-members:
    :show-inheritance:
