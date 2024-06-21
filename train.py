@@ -2,7 +2,7 @@ import jax
 
 from functools import partial
 
-from jax import Array, value_and_grad
+from jax import Array, value_and_grad, tree_map
 import jax.numpy as jnp
 from jax_smi import initialise_tracking
 import optax
@@ -20,14 +20,20 @@ initialise_tracking()
 @value_and_grad
 def loss_and_grad(params: MistralLMParams, seq_ids: Array, qk_mask: Array, label_ids: Array, label_mask: Array, rotary_values: RotaryValues) -> Array:
     logits, _ = forward_mistral_lm(params, seq_ids, qk_mask, rotary_values, None)
+    print('=========')
+    print(logits.shape)
+    print(label_ids.shape)
+    print(label_mask.shape)
     loss = optax.softmax_cross_entropy_with_integer_labels(logits=logits, labels=label_ids)
     loss = jnp.mean(loss, where=label_mask)
+    print(loss)
     return loss
 
 def main():
     jax.distributed.initialize()
-    model = MistralForCausalLM.from_pretrained('mistralai/Mistral-7B-v0.1')
-    tokenizer = AutoTokenizer.from_pretrained('mistralai/Mistral-7B-v0.1')
+    model_dir = 'mistral-hf-7B-v0.2'  # convert first with 'Mistral 7B v0.2 Parameter Conversion' part in README
+    model = MistralForCausalLM.from_pretrained(model_dir)
+    tokenizer = AutoTokenizer.from_pretrained(model_dir)
     tokenizer.pad_token = tokenizer.eos_token
 
     if jax.local_device_count() == 8:
@@ -38,6 +44,7 @@ def main():
     elif jax.local_device_count() == 4:
         # if it's V4-32
         params = convert_mistral_lm_params(model)
+    params = tree_map(lambda x: x.astype(jnp.bfloat16), params)
     params = shard_mistral_lm_params(params)
 
     epochs = 3

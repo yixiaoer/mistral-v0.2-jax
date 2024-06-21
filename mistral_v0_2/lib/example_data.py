@@ -19,9 +19,16 @@ def load_data(splitting: str) -> tuple[list[str], list[int]]:
     if splitting == 'train':
         train_input = dataset['train']['text']
         train_labels = dataset['train']['label']
+        print('000000000000000000000000000000000000000')
+        print(train_input[0])
+        print(len(train_input[0]))
+        print(train_labels[0])  # 4
         return train_input, train_labels
     test_input = dataset['test']['text']
     test_labels = dataset['test']['label']
+    print('11111111111111111111111111')
+    print(test_input[0])
+    print(test_labels[0])
     return test_input, test_labels
 
 class ExampleDataset(Dataset):
