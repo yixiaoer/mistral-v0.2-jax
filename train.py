@@ -4,7 +4,7 @@ from functools import partial
 
 from jax import Array, value_and_grad, tree_map
 import jax.numpy as jnp
-from jax_smi import initialise_tracking
+# from jax_smi import initialise_tracking
 import optax
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, MistralForCausalLM
@@ -15,7 +15,7 @@ from mistral_v0_2.model.mistral_lm import MistralLMParams, forward_mistral_lm
 from mistral_v0_2.model.rotary_embedding import RotaryValues, make_rotary_values
 from mistral_v0_2.model.mistral_lm import convert_mistral_lm_params, shard_mistral_lm_params
 
-initialise_tracking()
+# initialise_tracking()
 
 @value_and_grad
 def loss_and_grad(params: MistralLMParams, seq_ids: Array, qk_mask: Array, label_ids: Array, label_mask: Array, rotary_values: RotaryValues) -> Array:

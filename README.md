@@ -114,6 +114,7 @@ pip install "jax[tpu]" -f https://storage.googleapis.com/jax-releases/libtpu_rel
 pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
 pip install git+https://github.com/huggingface/transformers
 pip install -r requirements.txt
+pip install protobuf
 ```
 
 ## Mistral 7B v0.2 Parameter Conversion
@@ -123,6 +124,9 @@ After downloading [model v0.2](https://models.mistralcdn.com/mistral-7b-v0-2/mis
 Convert Mistral 7B v0.2 model weight to HuggingFace format by specifying an `output_dir` in the command, such as `mistral-hf-7B-v0.2`. (Later, use this directory as `model_dir` to access the model):
 
 ```sh
+mkdir mistral-7B-v0.2
+wget -O mistral-7B-v0.2 https://models.mistralcdn.com/mistral-7b-v0-2/mistral-7B-v0.2.tar
+# download tokenizer from website url
 python convert_mistral_weight_to_hf.py --input_dir mistral-7B-v0.2 --model_size 7B --output_dir mistral-hf-7B-v0.2
 ```
 

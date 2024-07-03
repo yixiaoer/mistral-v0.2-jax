@@ -1,5 +1,6 @@
 jax
 jaxlib
+optax
 torch
 transformers
 datasets
